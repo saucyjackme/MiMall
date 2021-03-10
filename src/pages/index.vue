@@ -1,0 +1,1 @@
+// index.js会嵌套在home.vue的router-view中

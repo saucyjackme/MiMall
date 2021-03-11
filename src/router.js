@@ -29,11 +29,11 @@ export default new Router({
         },{
           path: '/product/:id',
           name: 'product',
-          component: Product
+          component: Product,
         },{
           path: '/detail/:id',
           name: 'detail',
-          component: Detail
+          component: Detail,
         }
       ]
     },

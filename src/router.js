@@ -48,17 +48,17 @@ export default new Router({
       component: Order, 
       children: [
         {
-          path:'/list',
+          path:'list',
           name: 'order-list',
           component: OrderList
         },
         {
-          path:'/confirm',
+          path:'confirm',
           name: 'order-confirm',
           component: OrderConfirm
         },
         {
-          path: '/pay',
+          path: 'pay',
           name: 'order-pay',
           component: OrderPay
         }

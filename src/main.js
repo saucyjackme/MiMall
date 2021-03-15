@@ -4,9 +4,11 @@ import routers from './router'
 import axios from 'axios'
 //VueAxios将axios挂载至vue上
 import VueAxios from 'vue-axios'
+
+import env from './env'
 //拦截器
 // 设置默认值，根据前端的跨域方式作调整
-axios.defaults.baseURL = 'http://test-www.imooc.com/api';
+axios.defaults.baseURL = env.baseURL;
 //超时处理
 axios.defaults.timeout = 8000;
 //接口错误拦截

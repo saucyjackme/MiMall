@@ -6,7 +6,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 //拦截器
 // 设置默认值，根据前端的跨域方式作调整
-axios.defaults.baseURL = '/api';
+axios.defaults.baseURL = 'http://test-www.imooc.com/api';
 //超时处理
 axios.defaults.timeout = 8000;
 //接口错误拦截

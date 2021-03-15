@@ -5,10 +5,19 @@ import axios from 'axios'
 //VueAxios将axios挂载至vue上
 import VueAxios from 'vue-axios'
 
+//mock开关
+const mock = true;
+if(mock) {
+  //import 是预编译加载，直接加载到内存中
+  //1require是按需加载
+  require('./mock/api');
+}
+
 // import env from './env'
 //拦截器
 // 设置默认值，根据前端的跨域方式作调整
 // axios.defaults.baseURL = env.baseURL;
+axios.defaults.baseURl = '/api';
 //超时处理
 axios.defaults.timeout = 8000;
 //接口错误拦截

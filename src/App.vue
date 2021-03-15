@@ -25,7 +25,11 @@ export default {
     // this.axios.get('./mock/user/login.json').then((res)=>{
     //   this.res = res;
     // });
-    //#2 通过easymock平台实现模拟数据
+    //#2 通过easymock平台实现模拟数据,只改baseURL地址
+    //#3 mockjs本地拦截
+    this.axios.get('/user/login').then((res)=>{
+      this.res = res;
+    });
 
   }
 }

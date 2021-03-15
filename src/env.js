@@ -2,7 +2,7 @@ let baseURL;
 //根据不同环境输出不同的地址
 //获得node.js进程中的环境变量
 switch (process.env.NODE_ENV) {
-  case 'dev':
+  case 'development':
     baseURL = 'http://dev-mall-pre.springboot.cn/api';
     break;
   case 'test':

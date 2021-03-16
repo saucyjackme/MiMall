@@ -14,7 +14,7 @@ if(mock) {
 }
 
 // import env from './env'
-//拦截器
+//axios拦截器
 // 设置默认值，根据前端的跨域方式作调整
 // axios.defaults.baseURL = env.baseURL;
 axios.defaults.baseURl = '/api';

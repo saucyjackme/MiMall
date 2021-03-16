@@ -6,7 +6,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 //mock开关
-const mock = true;
+const mock = false;
 if(mock) {
   //import 是预编译加载，直接加载到内存中
   //1require是按需加载

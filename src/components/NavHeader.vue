@@ -11,12 +11,21 @@
         <div class="topbar-user">
           <a href="javascript:;">登录</a>
           <a href="javascript:;">注册</a>
-          <a href="javascript:;" class="my-cart"><span class="icon-cart"></span>购物车</a
+          <a href="javascript:;" class="my-cart"
+            ><span class="icon-cart"></span>购物车</a
           >
         </div>
       </div>
     </div>
-    <div class="nav-header"></div>
+    <div class="nav-header">
+      <div class="container">
+        <div class="header-logo">
+          <a href="/#/index"></a>
+        </div>
+        <div class="header-menu"></div>
+        <div class="header-search"></div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -25,6 +34,8 @@ export default {
 };
 </script>
 <style lang="scss">
+@import '../assets/scss/base.scss';
+
 .header {
   .nav-topbar {
     height: 39px;
@@ -32,9 +43,6 @@ export default {
     background-color: #333333;
     color: #b0b0b0;
     .container {
-      width: 1226px;
-      margin-right: auto;
-      margin-left: auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -45,18 +53,23 @@ export default {
       }
       .my-cart {
         width: 110px;
-        background-color: #FF6600;
+        background-color: #ff6600;
         text-align: center;
-        color:#ffffff;
+        color: #ffffff;
         .icon-cart {
           display: inline-block;
           width: 16px;
           height: 12px;
-          background:url('/imgs/icon-cart-checked.png') no-repeat center;
+          background: url("/imgs/icon-cart-checked.png") no-repeat center;
           background-size: contain;
           margin-right: 4px;
         }
       }
+    }
+  }
+  .nav-header {
+    .container {
+
     }
   }
 }

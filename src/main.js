@@ -17,7 +17,7 @@ if(mock) {
 //axios拦截器
 // 设置默认值，根据前端的跨域方式作调整
 // axios.defaults.baseURL = env.baseURL;
-axios.defaults.baseURl = '/api';
+axios.defaults.baseURL = '/api';
 //超时处理
 axios.defaults.timeout = 8000;
 //接口错误拦截

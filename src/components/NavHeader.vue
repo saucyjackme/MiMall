@@ -171,11 +171,19 @@ export default {
     }
   },
   mounted() {
-
+    this.getProductList();
   },
   methods:{
     getProductList() {
-      this.axios.get('/products')
+      this.axios.get('/products',{
+        params:{
+          categoryId:'100012'
+        }
+      }).then((res)=>{
+        if(res.list>6) {
+          this.phoneList = res.list.slice(0,6);
+        }
+      })
     }
   }
 };

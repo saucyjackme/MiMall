@@ -8,7 +8,7 @@ module.exports = {
         target: 'http://mall-pre.springboot.cn',
         changeOrigin:true,
         pathRewrite: {
-          '/api':' '
+          '/api':''
         }
       }
     }

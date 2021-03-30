@@ -221,11 +221,12 @@ export default {
       this.axios.get('/products',{
         params:{
           categoryId:100012,
-          pageSize:8
+          pageSize:14
         }
       }).then((res)=>{
         //将res结果分割成二维数组并赋值phoneList
         // console.log(res.list);
+        res.list = res.list.slice(6,14);
         this.phoneList = [res.list.slice(0,4),res.list.slice(4,8)];
       })
     }

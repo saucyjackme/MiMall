@@ -101,11 +101,22 @@
       </div>
     </div>
     <service-bar></service-bar>
+    <modal 
+      title="提示" 
+      sureText="查看购物车" 
+      btnType="1" 
+      modalType="middle" 
+      v-bind:showModal="true">
+        <template  v-slot:body>
+          <p>商品添加成功!</p>
+        </template>
+      </modal>
   </div>
 </template>
 <script>
 //index.js会嵌套在home.vue的router-view中
 import ServiceBar from "../components/ServiceBar";
+import Modal from "../components/Modal";
 //结构引入子组件
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 //引入css
@@ -117,6 +128,7 @@ export default {
     swiper,
     swiperSlide,
     ServiceBar,
+    Modal
   },
   data() {
     return {

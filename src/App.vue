@@ -7,6 +7,7 @@
 <script>
 // import storage from './storage/index'
 
+
 export default {
   name: 'App',
   components: {
@@ -34,7 +35,9 @@ export default {
   }
 }
 </script>
+<style lang="scss">
 
-<style>
-@import './assets/scss/reset.scss'
+@import './assets/scss/reset.scss';
+
+
 </style>

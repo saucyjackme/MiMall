@@ -82,17 +82,16 @@
           <div class="list-box">
             <div class="list" v-for="(arr, i) in phoneList" v-bind:key="i">
               <div class="item" v-for="(item, j) in arr" v-bind:key="j">
-                <span v-bind:class="{'new-pro':j%2==0}">新品</span>
+                <span v-bind:class="{ 'new-pro': j % 2 == 0 }">新品</span>
                 <div class="item-img">
-                  <img
-                    v-bind:src="item.mainImage"
-                    alt=""
-                  />
+                  <img v-bind:src="item.mainImage" alt="" />
                 </div>
                 <div class="item-info">
-                  <h3>{{item.name}}</h3>
-                  <p>{{item.subtitle}}</p>
-                  <p class="price">{{item.price}}元</p>
+                  <h3>{{ item.name }}</h3>
+                  <p>{{ item.subtitle }}</p>
+                  <p class="price" @click="addCart(item.id)">
+                    {{ item.price }}元
+                  </p>
                 </div>
               </div>
             </div>
@@ -101,16 +100,19 @@
       </div>
     </div>
     <service-bar></service-bar>
-    <modal 
-      title="提示" 
-      sureText="查看购物车" 
-      btnType="1" 
-      modalType="middle" 
-      v-bind:showModal="true">
-        <template  v-slot:body>
-          <p>商品添加成功!</p>
-        </template>
-      </modal>
+    <modal
+      title="提示"
+      sureText="查看购物车"
+      btnType="1"
+      modalType="middle"
+      v-bind:showModal="showModal"
+      v-on:submit="goToCart"
+      v-on:cancel="showModal = false"
+    >
+      <template v-slot:body>
+        <p>商品添加成功!</p>
+      </template>
+    </modal>
   </div>
 </template>
 <script>
@@ -128,7 +130,7 @@ export default {
     swiper,
     swiperSlide,
     ServiceBar,
-    Modal
+    Modal,
   },
   data() {
     return {
@@ -219,30 +221,47 @@ export default {
           img: "/imgs/ads/ads-4.jpg",
         },
       ],
-      phoneList: [
-        [1, 1, 1, 1],
-        [1, 1, 1, 1],
-      ],
+      phoneList: [],
+      showModal: false,
     };
   },
-  mounted(){
+  mounted() {
     this.init();
   },
-  methods:{
+  methods: {
     init() {
-      this.axios.get('/products',{
-        params:{
-          categoryId:100012,
-          pageSize:14
-        }
-      }).then((res)=>{
-        //将res结果分割成二维数组并赋值phoneList
-        // console.log(res.list);
-        res.list = res.list.slice(6,14);
-        this.phoneList = [res.list.slice(0,4),res.list.slice(4,8)];
-      })
-    }
-  }
+      this.axios
+        .get("/products", {
+          params: {
+            categoryId: 100012,
+            pageSize: 14,
+          },
+        })
+        .then((res) => {
+          //将res结果分割成二维数组并赋值phoneList
+          // console.log(res.list);
+          res.list = res.list.slice(6, 14);
+          this.phoneList = [res.list.slice(0, 4), res.list.slice(4, 8)];
+        });
+    },
+    //添加购物车
+    addCart() {
+      this.showModal = true;
+      return;
+      // this.axios.post('/carts',{
+      //   productID: id,
+      //   selected: true,
+      // }).then(()=>{
+
+      // }).catch(()=>{
+      //   this.showModal = true;
+      // })
+    },
+    //跳转购物车
+    goToCart() {
+      this.$router.push('/cart');
+    },
+  },
 };
 </script>
 <style lang="scss">

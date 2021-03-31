@@ -4,6 +4,7 @@ import routers from './router'
 import axios from 'axios'
 //VueAxios将axios挂载至vue上
 import VueAxios from 'vue-axios'
+import VueLazyLoad from 'vue-lazyload'
 
 //mock开关
 const mock = false;
@@ -33,6 +34,10 @@ axios.interceptors.response.use(function(response){
 });
 
 Vue.use(VueAxios,axios);
+//图片懒加载
+Vue.use(VueLazyLoad,{
+  loading:'/imgs/loading-svg/loading-bars.svg'
+});
 Vue.config.productionTip = false
 
 new Vue({

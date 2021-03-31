@@ -10,20 +10,22 @@
         <slot name="body"> </slot>
       </div>
       <div class="modal-footer">
-        <a href="javacscript:;" class="btn">确定</a>
-        <a href="javacscript:;" class="btn">取消</a>
+        <div class="btn-group">
+          <a href="javacscript:;" class="btn">确定</a>
+          <a href="javacscript:;" class="btn">取消</a>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: 'modal',
+  name: "modal",
   props: {
     //弹框类型：小small、中middle、大large、表单form
     modalType: {
       type: String,
-      default: 'form'
+      default: "form",
     },
     //弹框标题
     title: String,
@@ -31,20 +33,20 @@ export default {
     btnType: String,
     sureText: {
       type: String,
-      default: '确定'
+      default: "确定",
     },
     cancelText: {
       type: String,
-      default: '取消'
+      default: "取消",
     },
-    showModal: Boolean
-  }
-}
+    showModal: Boolean,
+  },
+};
 </script>
 <style lang="scss">
 //要注意引入顺序，否则报错。eg,先引入config文件有了自定义的变量，再mixin中使用
-@import './../assets/scss/config.scss';
-@import './../assets/scss/mixin.scss';
-@import './../assets/scss/modal.scss';
+@import "./../assets/scss/config.scss";
+@import "./../assets/scss/mixin.scss";
+@import "./../assets/scss/modal.scss";
 </style>
 

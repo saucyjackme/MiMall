@@ -5,6 +5,7 @@ import axios from 'axios'
 //VueAxios将axios挂载至vue上
 import VueAxios from 'vue-axios'
 import VueLazyLoad from 'vue-lazyload'
+import VueCookie from 'vue-cookie'
 
 //mock开关
 const mock = false;
@@ -30,10 +31,12 @@ axios.interceptors.response.use(function(response){
     window.location.href = '/#/login'
   }else {
     alert(res.msg);
+    return Promise.reject(res);
   }
 });
 
 Vue.use(VueAxios,axios);
+Vue.use(VueCookie);
 //图片懒加载
 Vue.use(VueLazyLoad,{
   loading:'/imgs/loading-svg/loading-bars.svg'

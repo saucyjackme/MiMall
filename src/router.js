@@ -11,6 +11,7 @@ import OrderList from './pages/orderList'
 import OrderPay from './pages/orderPay'
 import OrderConfirm from './pages/orderConfirm'
 import AliPay from './pages/alipay'
+import Login from './pages/login'
 
 //加载Router
 Vue.use(Router);
@@ -42,6 +43,11 @@ export default new Router({
       path: '/cart',
       name: 'cart',
       component: Cart,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
     },
     {
       path: '/order',

@@ -122,7 +122,7 @@ export default {
   name: "nav-header",
   data() {
     return {
-      username:'jack',
+      username:'',
       phoneList:[]
     }
   },
@@ -175,6 +175,7 @@ export default {
        margin-right: 17px;
       }
       .my-cart {
+        margin-right: 0;
         width: 110px;
         background-color: #ff6600;
         text-align: center;

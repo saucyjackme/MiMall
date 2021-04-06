@@ -18,20 +18,25 @@ export default {
     }
   },
   mounted() {
-    // storage.setItem('a',1);
-    // storage.setItem('user',{a:1});
-    // storage.setItem('abc',{a:1},'user');
-    // storage.clear('a');
-    //#1 mock数据第一种方法：本地加载静态json文件的形式
-    // this.axios.get('./mock/user/login.json').then((res)=>{
-    //   this.res = res;
-    // });
-    //#2 通过easymock平台实现模拟数据,只改baseURL地址
-    //#3 mockjs本地拦截
     this.axios.get('/user/login').then((res)=>{
       this.res = res;
     });
-
+    this.getUser();
+    this.getCartCount();
+  },
+  methods:{
+    //拉取用户信息
+    getUser() {
+      this.axios.get('/user').then(()=>{
+        //to do 保存到vuex中
+      })
+    },
+    //获取购物车数量
+    getCartCount() {
+      this.axios.get('/carts/products/sum').then(()=>{
+        //to do 保存到vuex中
+      })
+    }
   }
 }
 </script>

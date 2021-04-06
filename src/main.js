@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
-import routers from './router'
+import router from './router'
 import axios from 'axios'
+// 将store加载
+import store from './store'
 //VueAxios将axios挂载至vue上
 import VueAxios from 'vue-axios'
 import VueLazyLoad from 'vue-lazyload'
@@ -48,6 +50,7 @@ Vue.use(VueLazyLoad,{
 Vue.config.productionTip = false
 
 new Vue({
-  router:routers,
+  store,
+  router,
   render: h => h(App),
 }).$mount('#app')

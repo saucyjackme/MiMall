@@ -11,9 +11,9 @@
         <div class="topbar-user">
           <a href="javascript:;" v-if="username">{{username}}</a>
           <a href="javascript:;" v-if="!username" @click="login">登录</a>
-           <a href="javascript:;" v-if="username">我的订单</a>
+          <a href="javascript:;" v-if="username">我的订单</a>
           <a href="javascript:;" class="my-cart" @click="goToCart">
-            <span class="icon-cart"></span>购物车</a>
+            <span class="icon-cart"></span>购物车 [{{cartCount}}]</a>
         </div>
       </div>
     </div>
@@ -28,13 +28,17 @@
             <span>小米手机</span>
             <div class="children">
               <ul>
-                <li class="product" v-for="(item,index) in phoneList" :key="index">
-                  <a v-bind:href="'/#/product/'+item.id" target="_blank">
+                <li
+                  class="product"
+                  v-for="(item, index) in phoneList"
+                  :key="index"
+                >
+                  <a v-bind:href="'/#/product/' + item.id" target="_blank">
                     <div class="pro-img">
-                      <img v-lazy="item.mainImage" :alt="item.subtitle">
+                      <img v-lazy="item.mainImage" :alt="item.subtitle" />
                     </div>
-                    <div class="pro-name">{{item.name}}</div>
-                    <div class="pro-price">{{item.price | currency}}</div>
+                    <div class="pro-name">{{ item.name }}</div>
+                    <div class="pro-price">{{ item.price | currency }}</div>
                   </a>
                 </li>
               </ul>
@@ -51,7 +55,7 @@
                 <li class="product">
                   <a href="" target="_blank">
                     <div class="pro-img">
-                      <img v-lazy="'/imgs/nav-img/nav-3-1.jpg'" alt="">
+                      <img v-lazy="'/imgs/nav-img/nav-3-1.jpg'" alt="" />
                     </div>
                     <div class="pro-name">小米壁画电视 65英寸</div>
                     <div class="pro-price">6999元</div>
@@ -60,7 +64,7 @@
                 <li class="product">
                   <a href="" target="_blank">
                     <div class="pro-img">
-                      <img v-lazy="'/imgs/nav-img/nav-3-2.jpg'" alt="">
+                      <img v-lazy="'/imgs/nav-img/nav-3-2.jpg'" alt="" />
                     </div>
                     <div class="pro-name">小米全面屏电视E55A</div>
                     <div class="pro-price">1999元</div>
@@ -69,7 +73,7 @@
                 <li class="product">
                   <a href="" target="_blank">
                     <div class="pro-img">
-                      <img v-lazy="'/imgs/nav-img/nav-3-3.png'" alt="">
+                      <img v-lazy="'/imgs/nav-img/nav-3-3.png'" alt="" />
                     </div>
                     <div class="pro-name">小米CC9</div>
                     <div class="pro-price">1799元</div>
@@ -78,7 +82,7 @@
                 <li class="product">
                   <a href="" target="_blank">
                     <div class="pro-img">
-                      <img v-lazy="'/imgs/nav-img/nav-3-4.jpg'" alt="">
+                      <img v-lazy="'/imgs/nav-img/nav-3-4.jpg'" alt="" />
                     </div>
                     <div class="pro-name">小米CC9</div>
                     <div class="pro-price">1799元</div>
@@ -87,7 +91,7 @@
                 <li class="product">
                   <a href="" target="_blank">
                     <div class="pro-img">
-                      <img v-lazy="'/imgs/nav-img/nav-3-5.jpg'" alt="">
+                      <img v-lazy="'/imgs/nav-img/nav-3-5.jpg'" alt="" />
                     </div>
                     <div class="pro-name">小米CC9</div>
                     <div class="pro-price">1799元</div>
@@ -96,7 +100,7 @@
                 <li class="product">
                   <a href="" target="_blank">
                     <div class="pro-img">
-                      <img v-lazy="'/imgs/nav-img/nav-3-6.png'" alt="">
+                      <img v-lazy="'/imgs/nav-img/nav-3-6.png'" alt="" />
                     </div>
                     <div class="pro-name">查看全部</div>
                     <div class="pro-price">查看全部</div>
@@ -109,7 +113,7 @@
         <!-- 顶部搜索栏 -->
         <div class="header-search">
           <div class="wrapper">
-            <input type="text" name="keyword">
+            <input type="text" name="keyword" />
             <a href="javascript:;"></a>
           </div>
         </div>
@@ -118,48 +122,63 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: "nav-header",
   data() {
     return {
-      username:'',
-      phoneList:[]
-    }
+      // username: this.$store.state.username,
+      phoneList: [],
+    };
+  },
+  computed:{
+    // 通过计算属性解决数据显示延迟问题
+    // username() {
+    //   return this.$store.state.username;
+    // },
+    // cartCount() {
+    //   return this.$store.state.cartCount;
+    // }
+    //结构mapState 用于以上变量多的情况 相当于this.$store.state.xxxxx
+    ...mapState(['username','cartCount'])
   },
   filters: {
     currency(val) {
-      if(!val) return '0.00';
-      return '￥' + val.toFixed(2) + '元';
-    }
+      if (!val) return "0.00";
+      return "￥" + val.toFixed(2) + "元";
+    },
   },
   mounted() {
     this.getProductList();
   },
-  methods:{
+  methods: {
     login() {
-      this.$router.push ('/login');
+      this.$router.push("/login");
     },
     getProductList() {
-      this.axios.get('/products',{
-        params:{
-          categoryId:'100012',
-          pageSize:6
-        }
-      }).then((res)=>{
-          this.phoneList = res.list;  
-      })
+      this.axios
+        .get("/products", {
+          params: {
+            categoryId: "100012",
+            pageSize: 6,
+          },
+        })
+        .then((res) => {
+          this.phoneList = res.list;
+        });
     },
     goToCart() {
       //跳转路由，取参 router.parmas 或者router.query
-      this.$router.push('/cart');
-    }
-  }
+      this.$router.push("/cart");
+    },
+  },
 };
 </script>
 <style lang="scss">
-@import '../assets/scss/mixin.scss';
-@import '../assets/scss/base.scss';
-@import '../assets/scss/config.scss';
+@import "../assets/scss/mixin.scss";
+@import "../assets/scss/base.scss";
+@import "../assets/scss/config.scss";
 
 .header {
   .nav-topbar {
@@ -170,9 +189,9 @@ export default {
     .container {
       @include flex();
       a {
-       display: inline-block;
-       color: #b0b0b0;
-       margin-right: 17px;
+        display: inline-block;
+        color: #b0b0b0;
+        margin-right: 17px;
       }
       .my-cart {
         margin-right: 0;
@@ -180,8 +199,8 @@ export default {
         background-color: #ff6600;
         text-align: center;
         color: #ffffff;
-       .icon-cart {
-          @include bgImg(16px,12px,"/imgs/icon-cart-checked.png");
+        .icon-cart {
+          @include bgImg(16px, 12px, "/imgs/icon-cart-checked.png");
           margin-right: 4px;
         }
       }
@@ -205,21 +224,21 @@ export default {
           //利用伪类插入图片
           &::before {
             //content占位
-            content: '';
-            @include bgImg(55px,55px,"/imgs/mi-logo.png",55px);
-            transition: margin .2s;
+            content: "";
+            @include bgImg(55px, 55px, "/imgs/mi-logo.png", 55px);
+            transition: margin 0.2s;
           }
-        //利用伪类插入图片
+          //利用伪类插入图片
           &::after {
             //content占位
-            content: '';
-            @include bgImg(55px,55px,"/imgs/mi-home.png",55px);
+            content: "";
+            @include bgImg(55px, 55px, "/imgs/mi-home.png", 55px);
           }
           //通过hover改变伪类的值
           &:hover::before {
             margin-left: -55px;
             //动画过渡
-            transition: margin .2s;
+            transition: margin 0.2s;
           }
         }
       }
@@ -238,7 +257,7 @@ export default {
             cursor: pointer;
           }
           &:hover {
-            color:$colorA;
+            color: $colorA;
             .children {
               height: 220px;
               opacity: 1;
@@ -247,57 +266,57 @@ export default {
           .children {
             position: absolute;
             top: 112px;
-            left:0;
+            left: 0;
             width: 1226px;
             height: 0;
-            opacity:0;
+            opacity: 0;
             overflow: hidden;
-            border-top:1px solid #e5e5e5;
-            box-shadow:0px 7px 6px 0px rgba(0,0,0,0.11) ;
+            border-top: 1px solid #e5e5e5;
+            box-shadow: 0px 7px 6px 0px rgba(0, 0, 0, 0.11);
             z-index: 10;
             background-color: #ffffff;
-            transition: all .5s;
+            transition: all 0.5s;
+          }
+          .product {
+            position: relative;
+            float: left;
+            width: 16.6%;
+            height: 220px;
+            font-size: 12px;
+            line-height: 12px;
+            text-align: center;
+            a {
+              display: inline-block;
             }
-            .product {
-              position: relative;
-              float: left;
-              width: 16.6%;
-              height: 220px;
-              font-size: 12px;
-              line-height: 12px;
-              text-align: center;
-              a {
-                display: inline-block;
-              }
-              img {
-                width: auto;
-                height: 111px;
-                margin-top: 26px;
-              }
-              .pro-img {
-                height: 137px;
-              }
-              .pro-name {
-                font-weight: bold;
-                margin-top: 19px;
-                margin-bottom: 8px;
-                color: $colorB;
-              }
-              .pro-price {
-                color: $colorA;
-              }
-              &::before{
-              content: '';
+            img {
+              width: auto;
+              height: 111px;
+              margin-top: 26px;
+            }
+            .pro-img {
+              height: 137px;
+            }
+            .pro-name {
+              font-weight: bold;
+              margin-top: 19px;
+              margin-bottom: 8px;
+              color: $colorB;
+            }
+            .pro-price {
+              color: $colorA;
+            }
+            &::before {
+              content: "";
               position: absolute;
               top: 28px;
               right: 0;
               border-left: 1px solid $colorF;
               height: 100px;
               width: 1px;
-              }
-              &:last-child:before {
-                display:none;
-              }
+            }
+            &:last-child:before {
+              display: none;
+            }
           }
         }
       }
@@ -305,20 +324,20 @@ export default {
         width: 319px;
         .wrapper {
           height: 50px;
-          border: 1px solid #E0E0E0;
+          border: 1px solid #e0e0e0;
           display: flex;
           align-items: center;
           input {
             border: none;
             //盒模型
-            box-sizing:border-box;
+            box-sizing: border-box;
             border-right: 1px solid #e0e0e0;
             width: 264px;
             height: 50px;
             padding-left: 14px;
           }
           a {
-            @include bgImg(18px,18px,"/imgs/icon-search.png");
+            @include bgImg(18px, 18px, "/imgs/icon-search.png");
             margin-left: 17px;
           }
         }

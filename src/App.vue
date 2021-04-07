@@ -27,14 +27,16 @@ export default {
   methods:{
     //拉取用户信息
     getUser() {
-      this.axios.get('/user').then(()=>{
+      this.axios.get('/user').then((res)=>{
         //to do 保存到vuex中
+        this.$store.dispatch('saveUserName',res.username);
       })
     },
     //获取购物车数量
     getCartCount() {
-      this.axios.get('/carts/products/sum').then(()=>{
+      this.axios.get('/carts/products/sum').then((res)=>{
         //to do 保存到vuex中
+        this.$store.dispatch('saveCartCount',res);
       })
     }
   }

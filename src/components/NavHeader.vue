@@ -140,7 +140,7 @@ export default {
     // cartCount() {
     //   return this.$store.state.cartCount;
     // }
-    //结构mapState 用于以上变量多的情况 相当于this.$store.state.xxxxx
+    //结构mapState 用于以上变量多的情况 相当于上面的函数()this.$store.state.xxxxx
     ...mapState(['username','cartCount'])
   },
   filters: {

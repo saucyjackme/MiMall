@@ -58,7 +58,9 @@ export default {
         }).then((res) => {
           this.$cookie.set("userId", res.id, { expires: "1M" });
           //to-do 保存用户信息
+          //store对象，dispatch派发一个事件
           this.$store.dispatch('saveUserName',res.username);
+          // this.saveUserName(res.username);
           this.$router.push("/index");
         });
     },

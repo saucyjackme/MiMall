@@ -1,5 +1,5 @@
 <template>
-  <div class="nav-bar">
+  <div class="nav-bar" :class="{'is_fixed':isFixed}">
     <div class="container">
       <div class="pro-title">小米8</div>
       <div class="pro-param">
@@ -14,6 +14,26 @@
 <script>
 export default {
   name: "nav-bar",
+  data() {
+    return {
+      isFixed:false
+    }
+  },
+  mounted() {
+    window.addEventListener('scroll',this.initHeight);
+  },
+  methods:{
+    // 吸顶效果实现
+    initHeight() {
+      //谷歌:1.2.3 ;IE:1.2
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+      this.isFixed = scrollTop > 152? true : false;
+    }
+  },
+  destroyed() {
+    //需要取消吸顶效果  第三个参数：true：捕获，false:冒泡（精确）
+    window.removeEventListener('scroll',this.initHeight,false);
+  }
 };
 </script>
 
@@ -24,7 +44,14 @@ export default {
   .nav-bar {
     height: 70px;
     line-height: 70px;
-    border: 1px solid $colorH;
+    border-top: 1px solid $colorH;
+    background-color: $colorG;
+    &.is_fixed {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      box-shadow: 0 5px 5px $colorE;
+    }
     .container {
       @include flex();
       .pro-title {

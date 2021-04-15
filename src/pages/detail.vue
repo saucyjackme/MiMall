@@ -1,6 +1,6 @@
 <template>
   <div class="detail">
-    <product-param title="小米9"></product-param>
+    <product-param v-bind:title="product.name"></product-param>
     <div class="wrapper">
       <div class="container clearfix">
         <!-- 轮播图 -->
@@ -16,10 +16,10 @@
         </div>
         <!-- 购物详情页 -->
         <div class="content">
-          <h2 class="item-title">小米9</h2>
+          <h2 class="item-title">{{product.name}}</h2>
           <p class="item-info">相机全新升级 / 960帧超慢动作 / 手持超级夜景 / 全球首款双频GPS / 骁龙845处理器 / 红<br/>外人脸解锁 / AI变焦双摄 / 三星 AMOLED 屏</p>
           <div class="delivery">小米自营</div>
-          <div class="item-price">2599元<span class="del">2999元</span></div>
+          <div class="item-price">{{product.price}}元<span class="del">2999元</span></div>
           <div class="line"></div>
           <div class="item-addr">
             <i class="icon-loc"></i>
@@ -28,8 +28,8 @@
           </div>
           <div class="item-version clearfix">
             <h2>选择版本</h2>
-            <div class="phone fl checked">6GB+64GB 全网通</div>
-            <div class="phone fr">4GB+64GB 移动4G</div>
+            <div class="phone fl" :class="{'checked':version == 1}" @click="version = 1">6GB+64GB 全网通</div>
+            <div class="phone fr" :class="{'checked':version == 2}" @click="version = 2">4GB+64GB 移动4G</div>
           </div>
           <div class="item-color">
             <h2>选择颜色</h2>
@@ -40,13 +40,13 @@
           </div>
           <div class="item-total">
             <div class="phone-info clearfix">
-              <div class="fl">小米9 6GB+64GB 全网通 深灰色</div>
-              <div class="fr">2599元</div>
+              <div class="fl">{{product.name}} {{version == 1 ? '6GB+64GB 全网通' : '4GB+64GB 移动4G'}}</div>
+              <div class="fr">{{product.price}}元</div>
             </div>
-            <div class="phone-total">总计：2599元</div>
+            <div class="phone-total">总计：{{product.price}}元</div>
           </div>
           <div class="btn-group">
-            <a href="javascript:;" class="btn btn-huge fl" @click="addCart">加入购物车</a>
+            <a href="javascript:;" class="btn btn-huge fl">加入购物车</a>
           </div>
         </div>
       </div>
@@ -64,19 +64,21 @@
 </template>
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import ProductParam from './../components/ProductParam'
-import ServiceBar from './../components/ServiceBar';
+import ProductParam from '../components/ProductParam'
+import ServiceBar from '../components/ServiceBar';
 export default{
   name:'detail',
   data(){
     return {
+      version: 1,
+      product: {},
       swiperOption:{
         autoplay:true,
         pagination: {
           el: '.swiper-pagination',
           clickable :true,
         }
-      }
+      },
     }
   },
   components:{
@@ -85,10 +87,16 @@ export default{
     ProductParam,
     ServiceBar
   },
+  mounted() {
+    this.getProductInfo();
+  },
   methods:{
-    addCart(){
-      this.$router.push('/cart');
-    }
+    getProductInfo() {
+      let id = this.$route.params.id;
+      this.axios.get(`/products/${id}`).then((res)=>{
+        this.product = res;
+      })
+    },
   }
 }
 </script>

@@ -1,3 +1,5 @@
+@import '../scss/mixin.scss';
+
 .container {
   position: relative;
   width: 1226px;
@@ -31,4 +33,36 @@ input {
 
 .clearfix::after {
   clear: both;
+}
+//公共logo
+.header-logo {
+  background-color: #ff6600;
+  display: inline-block;
+  width: 55px;
+  height: 55px;
+  a {
+    //插入两张图片，宽度*2
+    display: inline-block;
+    width: 110px;
+    height: 55px;
+    //利用伪类插入图片
+    &::before {
+      //content占位
+      content: "";
+      @include bgImg(55px, 55px, "/imgs/mi-logo.png", 55px);
+      transition: margin 0.2s;
+    }
+    //利用伪类插入图片
+    &::after {
+      //content占位
+      content: "";
+      @include bgImg(55px, 55px, "/imgs/mi-home.png", 55px);
+    }
+    //通过hover改变伪类的值
+    &:hover::before {
+      margin-left: -55px;
+      //动画过渡
+      transition: margin 0.2s;
+    }
+  }
 }

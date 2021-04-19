@@ -34,6 +34,7 @@ axios.interceptors.response.use(function(response){
     //未登陆也可访问首页
     if(path != '#/index' ) {
       window.location.href = '/#/login';
+      return Promise.reject(res);
     }
   }else {
     alert(res.msg);

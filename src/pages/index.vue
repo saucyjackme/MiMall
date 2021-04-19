@@ -245,17 +245,16 @@ export default {
         });
     },
     //添加购物车
-    addCart() {
-      this.showModal = true;
-      return;
-      // this.axios.post('/carts',{
-      //   productID: id,
-      //   selected: true,
-      // }).then(()=>{
-
-      // }).catch(()=>{
-      //   this.showModal = true;
-      // })
+    addCart(id) {
+      this.axios.post('/carts',{
+        productID: id,
+        selected: true,
+      }).then((res)=>{
+        this.showModal = true;
+        this.$store.dispatch('saveCartCount',res.cartTotalQuantity);
+      }).catch(()=>{
+        this.showModal = true;
+      })
     },
     //跳转购物车
     goToCart() {

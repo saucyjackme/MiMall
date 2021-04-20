@@ -139,6 +139,16 @@ export default {
         this.renderData(res);
       })
     },
+    //下单功能
+    order() {
+      //list.every()返回的是布尔值
+      let isCheck = this.list.every(item =>item.productSelected);
+      if(isCheck) {
+        alert('请选择一件商品');
+      }else {
+        this.$router.push('/order/comfirm');
+      }
+    },
     //公共商品赋值
     renderData(res) {
       this.list = res.cartProductVoList || [];

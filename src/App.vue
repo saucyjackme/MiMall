@@ -7,46 +7,44 @@
 <script>
 // import storage from './storage/index'
 
-
 export default {
-  name: 'App',
-  components: {
-  },
+  name: "App",
+  components: {},
   data() {
     return {
-      res:{}
-    }
+      res: {},
+    };
   },
   mounted() {
-    this.axios.get('/user/login').then((res)=>{
-      this.res = res;
-    });
-    this.getUser();
-    this.getCartCount();
+    // this.axios.get('/user/login').then((res)=>{
+    //   this.res = res;
+    // });
+    // 只有登录才拉取信息
+    if (this.$cookie.get("userId")) {
+      this.getUser();
+      this.getCartCount();
+    }
   },
-  methods:{
+  methods: {
     //拉取用户信息
     getUser() {
-      this.axios.get('/user').then((res={})=>{
+      this.axios.get("/user").then((res = {}) => {
         //to do 保存到vuex中
-        this.$store.dispatch('saveUserName',res.username);
-      })
+        this.$store.dispatch("saveUserName", res.username);
+      });
     },
     //获取购物车数量
     getCartCount() {
-      this.axios.get('/carts/products/sum').then((res=0)=>{
+      this.axios.get("/carts/products/sum").then((res = 0) => {
         //to do 保存到vuex中
-        this.$store.dispatch('saveCartCount',res);
-      })
-    }
-  }
-}
+        this.$store.dispatch("saveCartCount", res);
+      });
+    },
+  },
+};
 </script>
 <style lang="scss">
-
-@import './assets/scss/reset.scss';
-@import './assets/scss/config.scss';
-@import './assets/scss/button.scss';
-
-
+@import "./assets/scss/reset.scss";
+@import "./assets/scss/config.scss";
+@import "./assets/scss/button.scss";
 </style>

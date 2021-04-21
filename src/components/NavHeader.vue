@@ -9,11 +9,13 @@
           <a href="javascript:;">协议规则</a>
         </div>
         <div class="topbar-user">
-          <a href="javascript:;" v-if="username">{{username}}</a>
+          <a href="javascript:;" v-if="username">{{ username }}</a>
           <a href="javascript:;" v-if="!username" @click="login">登录</a>
+          <a href="javascript:;" v-if="username" @click="logout">退出</a>
           <a href="javascript:;" v-if="username">我的订单</a>
           <a href="javascript:;" class="my-cart" @click="goToCart">
-            <span class="icon-cart"></span>购物车 [{{cartCount}}]</a>
+            <span class="icon-cart"></span>购物车 [{{ cartCount }}]</a
+          >
         </div>
       </div>
     </div>
@@ -122,7 +124,7 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
   name: "nav-header",
@@ -132,7 +134,7 @@ export default {
       phoneList: [],
     };
   },
-  computed:{
+  computed: {
     // 通过计算属性解决数据显示延迟问题
     // username() {
     //   return this.$store.state.username;
@@ -141,7 +143,7 @@ export default {
     //   return this.$store.state.cartCount;
     // }
     //结构mapState 用于以上变量多的情况 相当于上面的函数()this.$store.state.xxxxx
-    ...mapState(['username','cartCount'])
+    ...mapState(["username", "cartCount"]),
   },
   filters: {
     currency(val) {
@@ -151,6 +153,10 @@ export default {
   },
   mounted() {
     this.getProductList();
+    let params = this.$route.params;
+    if(params && params.from == 'login'){
+      this.getCartCount();
+    }
   },
   methods: {
     login() {
@@ -167,6 +173,23 @@ export default {
         .then((res) => {
           this.phoneList = res.list;
         });
+    },
+    getCartCount() {
+      this.axios.get("/carts/products/sum").then((res = 0) => {
+        //to do 保存到vuex中
+        this.$store.dispatch("saveCartCount", res);
+      });
+    },
+    logout() {
+      this.axios.post("/user/logout").then(() => {
+        this.$message.success("退出成功");
+        //前端清楚cookie和用户名、购物车
+        this.$cookie.set("userId", "", { expires: "-1" });
+        // 清空用户名
+        this.$store.dispatch("saveUserName", "");
+        // 清空购物车数量，置为0
+        this.$store.dispatch("saveCartCount", "0");
+      });
     },
     goToCart() {
       //跳转路由，取参 router.parmas 或者router.query

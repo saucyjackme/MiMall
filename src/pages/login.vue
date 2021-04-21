@@ -35,14 +35,14 @@
 </template>
 <script>
 // import { mapActions } from 'vuex';
-// import NavFooter from './../components/NavFooter'
+import NavFooter from './../components/NavFooter'
 import {Message} from 'element-ui'
 
 export default {
   name: "login",
-  // components:{
-  //   NavFooter
-  // },
+  components:{
+    NavFooter
+  },
   data() {
     return {
       username: "",
@@ -57,12 +57,21 @@ export default {
           username,
           password,
         }).then((res) => {
-          this.$cookie.set("userId", res.id, { expires: "1M" });
+          this.$cookie.set("userId", res.id, { expires: "Session" });
           //to-do 保存用户信息
           //store对象，dispatch派发一个事件
           this.$store.dispatch('saveUserName',res.username);
           // this.saveUserName(res.username);
-          this.$router.push("/index");
+          this.$router.push({
+            // path:'/index',
+            // query:{
+            //   from: 'login'
+            // }
+            name: 'index',
+            params: {
+              from: 'login'
+            }
+          });
         });
     },
     //注册用户

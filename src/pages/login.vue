@@ -36,6 +36,7 @@
 <script>
 // import { mapActions } from 'vuex';
 // import NavFooter from './../components/NavFooter'
+import {Message} from 'element-ui'
 
 export default {
   name: "login",
@@ -71,7 +72,7 @@ export default {
           password:'admin1',
           email:'admin1@163.com'
         }).then(() => {
-         alert('注册成功')
+         Message.success('注册成功')
         });
     },
   },

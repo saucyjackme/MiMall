@@ -2,6 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import axios from 'axios'
+import {Message} from 'element-ui'
+// 每次需要同时引入elementui样式
+import 'element-ui/lib/theme-chalk/index.css'
+
 // 将store加载
 import store from './store'
 //VueAxios将axios挂载至vue上
@@ -37,10 +41,12 @@ axios.interceptors.response.use(function(response){
       return Promise.reject(res);
     }
   }else {
-    alert(res.msg);
+    // alert(res.msg);
+    Message.warning(res.msg)
     return Promise.reject(res);
   }
 });
+
 
 Vue.use(VueAxios,axios);
 Vue.use(VueCookie);
@@ -48,6 +54,13 @@ Vue.use(VueCookie);
 Vue.use(VueLazyLoad,{
   loading:'/imgs/loading-svg/loading-bars.svg'
 });
+Vue.use(Message);
+//以prototype的形式扩展插件
+Vue.prototype.$message = Message;
+
+
+
+
 Vue.config.productionTip = false
 
 new Vue({

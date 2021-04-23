@@ -53,14 +53,20 @@
           <div class="item-address">
             <h2 class="addr-title">收货地址</h2>
             <div class="addr-list clearfix">
-              <div class="addr-info" v-for="(item,index) in list" :key="index">
-                <h2>{{item.receiverName}}</h2>
-                <div class="phone">{{item.receiverMobile}}</div>
+              <div class="addr-info" v-for="(item, index) in list" :key="index">
+                <h2>{{ item.receiverName }}</h2>
+                <div class="phone">{{ item.receiverMobile }}</div>
                 <div class="street">
-                  {{item.receiverProvince + ' ' + item.receiverCity+ ' ' + item.receiverDistrict}}<br/>东大街地铁
+                  {{
+                    item.receiverProvince +
+                    " " +
+                    item.receiverCity +
+                    " " +
+                    item.receiverDistrict
+                  }}<br />东大街地铁
                 </div>
                 <div class="action">
-                  <a href="javascript:;" class="fl">
+                  <a href="javascript:;" class="fl" @click="delAddress(item)">
                     <svg class="icon icon-del">
                       <use xlink:href="#icon-del"></use>
                     </svg>
@@ -81,13 +87,17 @@
           <div class="item-good">
             <h2>商品</h2>
             <ul>
-              <li v-for="(item,index) in cartList" :key="index">
+              <li v-for="(item, index) in cartList" :key="index">
                 <div class="good-name">
                   <img v-lazy="item.productMainImage" alt="" />
-                  <span>{{item.productName + '' + item.productSubtitle}}</span>
+                  <span>{{
+                    item.productName + "" + item.productSubtitle
+                  }}</span>
                 </div>
-                <div class="good-price">{{item.productPrice}}元x{{item.quantity}}</div>
-                <div class="good-total">{{item.productTotalPrice}}</div>
+                <div class="good-price">
+                  {{ item.productPrice }}元x{{ item.quantity }}
+                </div>
+                <div class="good-total">{{ item.productTotalPrice }}</div>
               </li>
             </ul>
           </div>
@@ -107,7 +117,7 @@
             </div>
             <div class="item">
               <span class="item-name">商品总价：</span>
-              <span class="item-val">{{cartTotalPrice}}元</span>
+              <span class="item-val">{{ cartTotalPrice }}元</span>
             </div>
             <div class="item">
               <span class="item-name">优惠活动：</span>
@@ -119,7 +129,7 @@
             </div>
             <div class="item-total">
               <span class="item-name">应付总额：</span>
-              <span class="item-val">{{cartTotalPrice}}元</span>
+              <span class="item-val">{{ cartTotalPrice }}元</span>
             </div>
           </div>
           <div class="btn-group">
@@ -132,12 +142,16 @@
       </div>
     </div>
     <modal
-      title="新增确认"
+      title="删除确认"
       btnType="1"
-      :showModal="showEditModal"
-      @cancel="showEditModal = false"
+      :showModal="showDelModal"
+      @cancel="showDelModal = false"
+      @submit="submitAddress"
     >
-      <template v-slot:body>
+      <template v-slot:body> 
+        <p>您确认要删除此地址吗？</p>
+      </template>
+      <!-- <template v-slot:body>
         <div class="edit-wrap">
           <div class="item">
             <input type="text" class="input" placeholder="姓名" />
@@ -170,7 +184,7 @@
             <input type="text" class="input" placeholder="邮编" />
           </div>
         </div>
-      </template>
+      </template> -->
     </modal>
   </div>
 </template>
@@ -183,9 +197,11 @@ export default {
     return {
       list: [], //收货地址列表
       cartList: [], //购物车中需要结算的商品列表
-      cartTotalPrice: 0,//购物车中商品总金额，默认为0
-      showEditModal: false, //是否显示新增或者编辑弹框
-      count: 0,//选中的商品结算数量
+      cartTotalPrice: 0, //购物车中商品总金额，默认为0
+      count: 0, //选中的商品结算数量
+      checkedItem: {}, //选中的商品的对象
+      userAction: "", //用户行为，0= 新增，1=编辑，2=删除
+      showDelModal: false, //是否显示显示新增或者编辑弹框
     };
   },
   components: {
@@ -202,6 +218,32 @@ export default {
         this.list = res.list;
       });
     },
+    //删除地址
+    delAddress(item) {
+      this.checkedItem = item;
+      this.userAction = 2;
+      this.showDelModal = true;
+    },
+    //地址删除、编辑、新增功能。提交地址
+    submitAddress() {
+      let { checkedItem, userAction } = this;
+      //统一定义发起接口的请求方法
+      let method, url ;
+      if (userAction == 0) {
+        method = "post", url = "/shippings";
+      } else if (userAction == 1) {
+        method = "put", url = `/shippings/${checkedItem.id}`;
+      } else if (userAction == 2) {
+        method = "delete", url = `/shippings/${checkedItem.id}`;
+      }
+      //this.aixos.get()
+      this.axios[method](url).then(() => {
+        this.closeModal();
+      //防止多端登录同一个账户造成数据不同步，多拉取一次
+        this.getAddressList();
+        this.$message.success('操作成功');
+      });
+    },
     getCartList() {
       this.axios.get("/carts").then((res) => {
         //获取购物车中所有商品数据
@@ -209,10 +251,10 @@ export default {
         //获取购物车中已选中的商品总价格
         this.cartTotalPrice = res.cartTotalPrice;
         //获取购物车中已选择的商品
-        this.cartList = this.list.filter(item => item.productSelected);
+        this.cartList = this.list.filter((item) => item.productSelected);
         // console.log(this.cartList);
       });
-      this.list.map((item)=>{
+      this.list.map((item) => {
         this.count += item.quantity;
       });
     },
@@ -221,7 +263,9 @@ export default {
       this.showEditModal = true;
     },
     closeModal() {
-      this.showEditModal = false;
+      this.checkedItem = {};
+      this.userAction = '';
+      this.showDelModal = false;
     },
     // 订单提交
     orderSubmit() {

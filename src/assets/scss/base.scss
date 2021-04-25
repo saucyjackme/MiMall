@@ -16,6 +16,8 @@ a {
 
 input {
   outline: none;
+  box-sizing: border-box;
+  font-size: 14px;
 }
 //通用浮动定义
 .fl {

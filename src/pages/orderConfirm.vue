@@ -142,13 +142,63 @@
       </div>
     </div>
     <modal
+      title="新增确认"
+      btnType="1"
+      :showModal="showEditModal"
+      @cancel="showEditModal = false"
+      @submit="submitAddress"
+    >
+      <template v-slot:body>
+        <div class="edit-wrap">
+          <div class="item">
+            <input type="text" class="input" placeholder="姓名" /><input type="text" class="input" placeholder="手机号" />
+          </div>
+          <div class="item">
+            <select name="province" id="">
+              <option value="北京">北京</option>
+              <option value="天津">天津</option>
+              <option value="上海">上海</option>
+              <option value="浙江省">浙江省</option>
+            </select>
+            <select name="city" id="">
+              <option value="请选择">请选择</option>
+              <option value="北京">北京</option>
+              <option value="天津">天津</option>
+              <option value="上海">上海</option>
+              <option value="上海">上海</option>
+              <option value="杭州市">杭州市</option>
+            </select>
+            <select name="district" id="">
+              <option value="请选择">请选择</option>
+              <option value="北京">北京</option>
+              <option value="天津">天津</option>
+              <option value="上海">上海</option>
+              <option value="上海">上海</option>
+              <option value="上城区">上城区</option>
+              <option value="西湖区">西湖区</option>
+              <option value="拱墅区">拱墅区</option>
+              <option value="江干区">江干区</option>
+            </select>
+          </div>
+          <div class="item">
+            <!-- 具体街道填写 -->
+            <textarea name="street" id="" cols="30" rows="10"></textarea>
+          </div>
+          <div class="item">
+            <input type="text" class="input" placeholder="邮编">
+          </div>
+        </div>
+      </template>
+    </modal>
+    <!-- 确认删除模态框 -->
+    <modal
       title="删除确认"
       btnType="1"
       :showModal="showDelModal"
       @cancel="showDelModal = false"
       @submit="submitAddress"
     >
-      <template v-slot:body> 
+      <template v-slot:body>
         <p>您确认要删除此地址吗？</p>
       </template>
       <!-- <template v-slot:body>
@@ -202,6 +252,7 @@ export default {
       checkedItem: {}, //选中的商品的对象
       userAction: "", //用户行为，0= 新增，1=编辑，2=删除
       showDelModal: false, //是否显示显示新增或者编辑弹框
+      showEditModal:false,
     };
   },
   components: {
@@ -228,20 +279,20 @@ export default {
     submitAddress() {
       let { checkedItem, userAction } = this;
       //统一定义发起接口的请求方法
-      let method, url ;
+      let method, url;
       if (userAction == 0) {
-        method = "post", url = "/shippings";
+        (method = "post"), (url = "/shippings");
       } else if (userAction == 1) {
-        method = "put", url = `/shippings/${checkedItem.id}`;
+        (method = "put"), (url = `/shippings/${checkedItem.id}`);
       } else if (userAction == 2) {
-        method = "delete", url = `/shippings/${checkedItem.id}`;
+        (method = "delete"), (url = `/shippings/${checkedItem.id}`);
       }
       //this.aixos.get()
       this.axios[method](url).then(() => {
         this.closeModal();
-      //防止多端登录同一个账户造成数据不同步，多拉取一次
+        //防止多端登录同一个账户造成数据不同步，多拉取一次
         this.getAddressList();
-        this.$message.success('操作成功');
+        this.$message.success("操作成功");
       });
     },
     getCartList() {
@@ -264,7 +315,7 @@ export default {
     },
     closeModal() {
       this.checkedItem = {};
-      this.userAction = '';
+      this.userAction = "";
       this.showDelModal = false;
     },
     // 订单提交
@@ -441,28 +492,28 @@ export default {
       margin-bottom: 15px;
       .input {
         display: inline-block;
-        width: 283px;
+        width: 200px;
         height: 40px;
         line-height: 40px;
         padding-left: 15px;
         border: 1px solid #e5e5e5;
-        & + .input {
+        &+.input {
           margin-left: 14px;
         }
       }
-      select {
-        height: 40px;
-        line-height: 40px;
-        border: 1px solid #e5e5e5;
-        margin-right: 15px;
-      }
-      textarea {
-        height: 62px;
-        width: 100%;
-        padding: 13px 15px;
-        box-sizing: border-box;
-        border: 1px solid #e5e5e5;
-      }
+    }
+    select {
+      height: 35px;
+      line-height: 35px;
+      border: 1px solid #e5e5e5;
+      margin-right: 15px;
+    }
+    textarea {
+      height: 62px;
+      width: 100%;
+      padding: 13px 15px;
+      border: 1px solid #e5e5e5;
+      box-sizing: border-box;
     }
   }
 }

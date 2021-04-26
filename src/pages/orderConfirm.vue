@@ -53,7 +53,13 @@
           <div class="item-address">
             <h2 class="addr-title">收货地址</h2>
             <div class="addr-list clearfix">
-              <div class="addr-info" v-for="(item, index) in list" :key="index">
+              <div
+                class="addr-info"
+                :class="{ checked: index == checkedIndex }"
+                @click="checkedIndex = index"
+                v-for="(item, index) in list"
+                :key="index"
+              >
                 <h2>{{ item.receiverName }}</h2>
                 <div class="phone">{{ item.receiverMobile }}</div>
                 <div class="street">
@@ -71,7 +77,11 @@
                       <use xlink:href="#icon-del"></use>
                     </svg>
                   </a>
-                  <a href="javascript:;" class="fr" @click="editAddressModal(item)">
+                  <a
+                    href="javascript:;"
+                    class="fr"
+                    @click="editAddressModal(item)"
+                  >
                     <svg class="icon icon-edit">
                       <use xlink:href="#icon-edit"></use>
                     </svg>
@@ -275,6 +285,7 @@ export default {
       userAction: "", //用户行为，0= 新增，1=编辑，2=删除
       showDelModal: false, //是否显示显示新增或者编辑弹框
       showEditModal: false,
+      checkedIndex:0 //当前收货地址中选中的索引
     };
   },
   components: {
@@ -401,11 +412,22 @@ export default {
     },
     // 订单提交
     orderSubmit() {
-      this.$router.push({
+      //判断是否选中收货地址
+      let item = this.list[this.checkedIndex];
+      if(!item) {
+        this.$message.error('请选择收货地址');
+        return;
+      }
+      //提交订单号
+      this.axios.post('/orders',{
+        shippingId:item.id
+      }).then((res)=>{
+         this.$router.push({
         path: "/order/pay",
         query: {
-          orderNo: 123,
+          orderNo: res.orderNo,
         },
+      });
       });
     },
   },

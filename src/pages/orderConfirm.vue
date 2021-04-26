@@ -63,7 +63,7 @@
                     item.receiverCity +
                     " " +
                     item.receiverDistrict
-                  }}<br />东大街地铁
+                  }}
                 </div>
                 <div class="action">
                   <a href="javascript:;" class="fl" @click="delAddress(item)">
@@ -71,7 +71,7 @@
                       <use xlink:href="#icon-del"></use>
                     </svg>
                   </a>
-                  <a href="javascript:;" class="fr">
+                  <a href="javascript:;" class="fr" @click="editAddressModal(item)">
                     <svg class="icon icon-edit">
                       <use xlink:href="#icon-edit"></use>
                     </svg>
@@ -303,8 +303,8 @@ export default {
       //统一定义发起接口的请求方法
       //用户行为，0= 新增，1=编辑，2=删除
       let method,
-          url,
-          params = {};
+        url,
+        params = {};
       if (userAction == 0) {
         (method = "post"), (url = "/shippings");
         params = {
@@ -322,28 +322,30 @@ export default {
         (method = "delete"), (url = `/shippings/${checkedItem.id}`);
       }
       if (userAction == 0 || userAction == 1) {
-        let {receiverName,
-        receiverMobile,
-        receiverProvince,
-        receiverCity,
-        receiverDistrict,
-        receiverAddres, 
-        receiverZip} = checkedItem;
-        let errMsg = '';
-        if(!receiverName) {
-          errMsg = '请输入收货人名称';
-        }else if(!receiverMobile || !/\d{11}/.test(receiverMobile)) {
-          errMsg = '请输入正确格式的手机号';
-        }else if(!receiverProvince) {
-          errMsg = '请选对应的省份';
-        }else if(!receiverCity) {
-          errMsg = '请选对应的市';
-        }else if(!receiverDistrict || !receiverAddres) {
-          errMsg = '请输入收货地址';
-        }else if(!receiverZip || !/\d{6}/.test(receiverZip)) {
-          errMsg = '请输入收货地址六位邮编';
+        let {
+          receiverName,
+          receiverMobile,
+          receiverProvince,
+          receiverCity,
+          receiverDistrict,
+          receiverAddres,
+          receiverZip,
+        } = checkedItem;
+        let errMsg = "";
+        if (!receiverName) {
+          errMsg = "请输入收货人名称";
+        } else if (!receiverMobile || !/\d{11}/.test(receiverMobile)) {
+          errMsg = "请输入正确格式的手机号";
+        } else if (!receiverProvince) {
+          errMsg = "请选对应的省份";
+        } else if (!receiverCity) {
+          errMsg = "请选对应的市";
+        } else if (!receiverDistrict || !receiverAddres) {
+          errMsg = "请输入收货地址";
+        } else if (!receiverZip || !/\d{6}/.test(receiverZip)) {
+          errMsg = "请输入收货地址六位邮编";
         }
-        if(errMsg) {
+        if (errMsg) {
           this.$message.error(errMsg);
           return;
         }
@@ -354,7 +356,7 @@ export default {
           receiverCity,
           receiverDistrict,
           receiverAddres,
-          receiverZip
+          receiverZip,
         };
       }
       //this.aixos.get()
@@ -369,6 +371,12 @@ export default {
     openAddressModal() {
       this.userAction = 0;
       this.checkedItem = {};
+      this.showEditModal = true;
+    },
+    //新增编辑地址弹框
+    editAddressModal(item) {
+      this.userAction = 1;
+      this.checkedItem = item;
       this.showEditModal = true;
     },
     getCartList() {

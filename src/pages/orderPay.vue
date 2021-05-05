@@ -17,7 +17,7 @@
             </div>
             <div class="order-total">
               <p>
-                应付总额：<span>{{ totalPrice }}</span
+                应付总额：<span>{{ payment }}</span
                 >元
               </p>
               <p>
@@ -73,12 +73,21 @@
       </div>
     </div>
     <scan-pay-code v-if="showPay" @close="closePayModal" :img="payImg"></scan-pay-code>
+    <modal title="支付确认" btnType="3" :showModal="showPayModal" sureText="查看订单" cancelText="未支付" @cancel="showPayModal=false" @submit="goOrderList">
+      <template v-slot:body>
+        <p>您确认是否完成支付?</p>
+      </template>
+    </modal>
   </div>
 </template>
 <script>
 // import OrderHeader from './../components/OrderHeader'
-import ScanPayCode from './../components/ScanPayCode'
+import Modal from './../components/Modal';
+import ScanPayCode from './../components/ScanPayCode';
 import QRCode from "qrcode";
+
+
+
 export default {
   name: "order-pay",
   data() {
@@ -90,11 +99,15 @@ export default {
       showPay: false, //是否显示微信支付弹框
       payType: "", //微信、支付宝支付方式是否选,payTpye=1,支付宝；payTpye=2，微信
       payImg: "",//微信支付二维码地址
+      showPayModal:false,//是否显示二次支付确认弹框
+      payment:0,//订单总金额
+      T: '',//定时器ID
     };
   },
   components: {
     // OrderHeader,
-    ScanPayCode
+    ScanPayCode,
+    Modal
   },
   mounted() {
     this.getOrderDetail();
@@ -108,7 +121,7 @@ export default {
         let item = res.shippingVo;
         this.addressInfo = `${item.receiverName} ${item.receiverMobile} ${item.receiverProvince} ${item.receiverCity} ${item.receiverDistrict} ${item.receiverAddress}`;
         this.orderDetail = res.orderItemVoList;
-        this.totalPrice = res.payment;
+        this.payment = res.payment;
       });
     },
     //提交支付状态
@@ -128,6 +141,8 @@ export default {
               .then((url) => {
                 this.showPay = true;
                 this.payImg = url;
+                //生成二维码的时候就轮询服务器查询订单支付状态
+                this.loopOrderState();
               })
               .catch(() => {
                 this.$message.error('微信二维码生成失败，请重试');
@@ -139,7 +154,21 @@ export default {
     closePayModal() {
       this.showPay = false;
       this.showPayModal = true;
+      //用户未支付&&点了关闭弹窗也需要清除定时器
       clearInterval(this.T);
+    },
+    //轮询当前订单支付状态
+    loopOrderState() {
+      this.T = setInterval(() => {
+        this.axios.get(`/order/${this.orderId}`).then((res)=>{
+          // 订单状态码;0-已取消；10-未付款；20-已付款；40-已发货；50-交易成功；60-交易关闭；
+          if(res.status == 20){
+            //清除定时器
+            clearInterval(this.T);
+            this.goOrderList();
+          }
+        })
+      }, 1000);
     },
     goOrderList() {
       this.$router.push("/order/list");

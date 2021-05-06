@@ -12,7 +12,7 @@
           <a href="javascript:;" v-if="username">{{ username }}</a>
           <a href="javascript:;" v-if="!username" @click="login">登录</a>
           <a href="javascript:;" v-if="username" @click="logout">退出</a>
-          <a href="javascript:;" v-if="username">我的订单</a>
+          <a href="javascript:;" v-if="username" @click="goOrderList">我的订单</a>
           <a href="javascript:;" class="my-cart" @click="goToCart">
             <span class="icon-cart"></span>购物车 [{{ cartCount }}]</a
           >
@@ -154,7 +154,7 @@ export default {
   mounted() {
     this.getProductList();
     let params = this.$route.params;
-    if(params && params.from == 'login'){
+    if (params && params.from == "login") {
       this.getCartCount();
     }
   },
@@ -194,6 +194,9 @@ export default {
     goToCart() {
       //跳转路由，取参 router.parmas 或者router.query
       this.$router.push("/cart");
+    },
+    goOrderList() {
+      this.$router.push("/order/list");
     },
   },
 };

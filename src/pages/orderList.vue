@@ -45,14 +45,24 @@
                 </div>
               </div>
               <div class="good-state fr" v-if="order.status == 20">
-                <a href="javascript:;">{{order.statusDesc}}</a>
+                <a href="javascript:;">{{ order.statusDesc }}</a>
               </div>
               <div class="good-state fr" v-else>
-                <a href="javascript:;" @click="goPay(order.orderNo)">{{order.statusDesc}}</a>
+                <a href="javascript:;" @click="goPay(order.orderNo)">{{
+                  order.statusDesc
+                }}</a>
               </div>
             </div>
           </div>
-          <no-data v-if="!loading && list.length ==0"></no-data>
+          <el-pagination 
+          class="pagination"
+          background 
+          layout="prev, pager, next" 
+          :pageSize="pageSize"
+          :total="total"
+          @current-change="handleChange">
+          </el-pagination>
+          <no-data v-if="!loading && list.length == 0"></no-data>
         </div>
       </div>
     </div>
@@ -60,20 +70,26 @@
 </template>
 <script>
 import OrderHeader from "../components/OrderHeader";
-import Loading from '../components/Loading';
-import NoData from '../components/NoData';
+import Loading from "../components/Loading";
+import NoData from "../components/NoData";
+//加载分页器 elementUI
+import { Pagination } from "element-ui";
 
 export default {
   name: "order-list",
   components: {
     OrderHeader,
     Loading,
-    NoData
+    NoData,
+    [Pagination.name]: Pagination,
   },
   data() {
     return {
       loading: true,
       list: [],
+      pageSize:10,
+      pageNumber:1,
+      total:0
     };
   },
   mounted() {
@@ -81,12 +97,21 @@ export default {
   },
   methods: {
     getOrderList() {
-      this.axios.get("/orders").then((res) => {
-        this.loading = false;
-        this.list = res.list;
-      }).catch(()=>{
-        this.loading = false;
-      });
+      this.axios
+        .get("/orders",{
+          params:{
+            pageNum:this.pageNum,
+
+          }
+        })
+        .then((res) => {
+          this.loading = false;
+          this.list = res.list;
+          this.total = res.total;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
     goPay(orderNo) {
       // 3种路由跳转方式
@@ -98,11 +123,15 @@ export default {
       //   }
       // });
       this.$router.push({
-        path:'/order/pay',
-        query:{
-          orderNo
-        }
-      })
+        path: "/order/pay",
+        query: {
+          orderNo,
+        },
+      });
+    },
+    handleChange(pageNum) {
+      this.pageNum = pageNum;
+      this.getOrderList();
     }
   },
 };

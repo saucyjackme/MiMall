@@ -12,7 +12,7 @@
           <div class="order" v-for="(order, index) in list" :key="index">
             <div class="order-title">
               <div class="item-info fl">
-                {{ order.creatTime }}
+                {{ order.createTime }}
                 <span>|</span>
                 {{ order.receiverName }}
                 <span>|</span>
@@ -55,6 +55,7 @@
             </div>
           </div>
           <el-pagination 
+          v-if="false"
           class="pagination"
           background 
           layout="prev, pager, next" 
@@ -62,6 +63,9 @@
           :total="total"
           @current-change="handleChange">
           </el-pagination>
+          <div class="load-more">
+            <el-button type="primary" :loading="loading" @click="loadMore">加载更多</el-button>
+          </div>
           <no-data v-if="!loading && list.length == 0"></no-data>
         </div>
       </div>
@@ -73,7 +77,7 @@ import OrderHeader from "../components/OrderHeader";
 import Loading from "../components/Loading";
 import NoData from "../components/NoData";
 //加载分页器 elementUI
-import { Pagination } from "element-ui";
+import { Pagination,Button } from "element-ui";
 
 export default {
   name: "order-list",
@@ -81,14 +85,16 @@ export default {
     OrderHeader,
     Loading,
     NoData,
+    //[xx.name] 等于el-xxx
     [Pagination.name]: Pagination,
+    [Button.name]:Button
   },
   data() {
     return {
-      loading: true,
+      loading: false,
       list: [],
       pageSize:10,
-      pageNumber:1,
+      pageNum:1,
       total:0
     };
   },
@@ -97,16 +103,17 @@ export default {
   },
   methods: {
     getOrderList() {
+      this.loading = true;
       this.axios
         .get("/orders",{
           params:{
+            pageSize:2,
             pageNum:this.pageNum,
-
           }
         })
         .then((res) => {
           this.loading = false;
-          this.list = res.list;
+          this.list = this.list.concat(res.list);
           this.total = res.total;
         })
         .catch(() => {
@@ -131,6 +138,10 @@ export default {
     },
     handleChange(pageNum) {
       this.pageNum = pageNum;
+      this.getOrderList();
+    },
+    loadMore() {
+      this.pageNum++;
       this.getOrderList();
     }
   },

@@ -66,6 +66,13 @@
           <div class="load-more">
             <el-button type="primary" :loading="loading" @click="loadMore">加载更多</el-button>
           </div>
+          <div class="scroll-more" 
+          v-infinite-scroll="scrollMore" 
+          infinite-scroll-disabled="busy" 
+          infinite-scroll-distance="410"
+          >
+            <img src="/imgs/loading-svg/loading-spinning-bubbles.svg" alt="" v-show="loading">
+          </div>
           <no-data v-if="!loading && list.length == 0"></no-data>
         </div>
       </div>
@@ -78,6 +85,8 @@ import Loading from "../components/Loading";
 import NoData from "../components/NoData";
 //加载分页器 elementUI
 import { Pagination,Button } from "element-ui";
+//加载滚动器
+import infiniteScroll from 'vue-infinite-scroll';
 
 export default {
   name: "order-list",
@@ -89,13 +98,16 @@ export default {
     [Pagination.name]: Pagination,
     [Button.name]:Button
   },
+  directives: {infiniteScroll},
   data() {
     return {
       loading: false,
       list: [],
       pageSize:10,
       pageNum:1,
-      total:0
+      total:0,
+      showNextPage: true,//加载更多，是否显示加载按钮
+      busy: false,//滚动加载，是否触发
     };
   },
   mounted() {
@@ -104,10 +116,11 @@ export default {
   methods: {
     getOrderList() {
       this.loading = true;
+      this.busy = true;
       this.axios
         .get("/orders",{
           params:{
-            pageSize:2,
+            pageSize:10,
             pageNum:this.pageNum,
           }
         })
@@ -115,6 +128,8 @@ export default {
           this.loading = false;
           this.list = this.list.concat(res.list);
           this.total = res.total;
+          this.showNextPage = res.hasNextPage;
+          this.busy = false;
         })
         .catch(() => {
           this.loading = false;
@@ -136,14 +151,44 @@ export default {
         },
       });
     },
+    //第一种方法：分页器
     handleChange(pageNum) {
       this.pageNum = pageNum;
       this.getOrderList();
     },
+    //第二种方法：加载更多按钮
     loadMore() {
       this.pageNum++;
       this.getOrderList();
-    }
+    },
+    //第三种方法：滚动加载更多
+    scrollMore() {
+      this.busy = true;
+      setTimeout(()=>{
+        this.pageNum++;
+        this.getList();
+      },500);
+    },
+    //专门给scrollMore使用
+     getList() {
+      this.loading = true;
+      this.axios
+        .get("/orders",{
+          params:{
+            pageSize:2,
+            pageNum:this.pageNum,
+          }
+        })
+        .then((res) => {
+          this.list = this.list.concat(res.list);
+          this.loading = false;
+          if(res.hasNextPage) {
+            this.busy = false;
+          }else {
+            this.busy = true;
+          }
+        });
+    },
   },
 };
 </script>
